@@ -6,41 +6,32 @@
     <style>canvas { width: 100%; height: 100% }</style>
 </head>
 <body>
+	<!-- A-Frame ライブラリの読み込み -->
+	<script src="https://aframe.io/releases/0.6.1/aframe.min.js"></script>
+	<!-- AR.js ライブラリの読み込み -->
+	<script src="https://jeromeetienne.github.io/AR.js/aframe/build/aframe-ar.js"></script>
+    <!-- three.js ライブラリの読み込み -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/91/three.min.js"></script>
-    <script>
-    /* ここに色々記述していきます */
 
-    /*シーンの作成*/
-    var scene = new THREE.Scene();
-    var camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
-    var renderer = new THREE.WebGLRenderer();
-    renderer.setSize( window.innerWidth, window.innerHeight );
-    document.body.appendChild( renderer.domElement );
+    <!-- A-Frame の VR空間に AR.js を紐づける -->
+    <a-scene embedded arjs="debugUIEnabled:false;">
 
-    /*立方体*/
-    var geometry = new THREE.CubeGeometry(1,1,1);                       //1*1*1 cube
-    var material = new THREE.MeshBasicMaterial( { color: 0xff0000 } );  //object metarial & color
-    var cube = new THREE.Mesh( geometry, material );                    //形、大きさ素材と色の設定を反映
-    scene.add( cube );                                                  //シーンに反映
-    camera.position.z = 5;                                              //カメラ角度
+        <!-- マーカーを登録（デフォルトで設定されている「hiro」マーカー） -->
+        <a-marker preset="hiro">
 
-    /*レンダリング*/
-    function render() {
-        requestAnimationFrame(render);
-        renderer.render(scene, camera);
-    }
+            <!-- マーカーの場所に立方体を置く -->
+            <a-box position="-2 0.5 0" wireframe="true"></a-box>
+        </a-marker>
 
-	render();
+        <a-entity camera
+            cursor-visible="true"
+            cursor-scale="2"
+            cursor-color="#ff0000"
+            cursor-opacity="0.5">
+    
+        </a-entity>
 
-	tick();
-
-	function tick() {
-  		requestAnimationFrame(tick);
-  		cube.rotation.y += 0.01;
-  		cube.rotation.x += 0.01;
-  		renderer.render(scene, camera);
-	}
-
-    </script>
+    </a-scene>
+    
 </body>
 </html>
