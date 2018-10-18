@@ -30,7 +30,16 @@
         renderer.render(scene, camera);
     }
 
-render();
+	render();
+
+	tick();
+
+	function tick() {
+  		requestAnimationFrame(tick);
+  		cube.rotation.y += 0.01;
+  		cube.rotation.x += 0.01;
+  		renderer.render(scene, camera);
+	}
 
     </script>
 </body>
