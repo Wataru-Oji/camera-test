@@ -1,3 +1,5 @@
+
+index.html
 <!DOCTYPE html>
 <!-- Three/AR/Tween.js サンプル by mkoku 2017/09/16 -->
 <!-- ベース... https://jeromeetienne.github.io/AR.js/three.js/examples/mobile-performance.html -->
@@ -17,9 +19,6 @@
 </head>
 
 <body>
-<!--aframe.js インクルード-->
-<script src="https://aframe.io/releases/0.6.1/aframe.min.js"></script>
-<script src="https://cdn.rawgit.com/jeromeetienne/AR.js/1.5.0/aframe/build/aframe-ar.js"> </script>
 
 <!-- Three.js のインクルード -->
 <!-- https://github.com/mrdoob/three.js/build/ より DL  -->
@@ -104,9 +103,29 @@ function onResize(){
 // マーカ
 // ネットでhiroマーカの画像を得て、以下の AR.js のマーカトレーニングサイトで patt を作成
 // https://jeromeetienne.github.io/AR.js/three.js/examples/marker-training/examples/generator.html
-
-                     
-
+var marker1 = new THREE.Group();                      // マーカをグループとして作成
+var controls = new THREEx.ArMarkerControls(context, marker1, {    // マーカを登録
+  type: "pattern",                                    // マーカのタイプ
+  patternUrl: "hiro.patt",                            // マーカファイル
+});
+scene.add(marker1);                                   // マーカをシーンに追加
+// モデル（メッシュ）
+var geo = new THREE.CubeGeometry(1, 1, 1);            // cube ジオメトリ（サイズは 1x1x1）
+var mat = new THREE.MeshNormalMaterial({              // マテリアルの作成
+  transparent: true,                                  // 透過
+  opacity: 0.5,                                       // 不透明度
+  side: THREE.DoubleSide,                             // 内側も描く
+});
+var mesh1 = new THREE.Mesh(geo, mat);                 // メッシュを生成
+mesh1.name = "cube";                                  // メッシュの名前（後でピッキングで使う）
+mesh1.position.set(0, 0.5, 0);                        // 初期位置
+marker1.add(mesh1);                                   // メッシュをマーカに追加
+// マーカ隠蔽（cloaking）
+var videoTex = new THREE.VideoTexture(source.domElement);  // 映像をテクスチャとして取得
+videoTex.minFilter = THREE.NearestFilter;             // 映像テクスチャのフィルタ処理
+var cloak = new THREEx.ArMarkerCloak(videoTex);       // マーカ隠蔽(cloak)オブジェクト
+cloak.object3d.material.uniforms.opacity.value = 1.0; // cloakの不透明度
+marker1.add(cloak.object3d);                          // cloakをマーカに追加
 //-------------------------------
 // その２（kanjiマーカ＋.json）
 //-------------------------------
@@ -122,7 +141,7 @@ scene.add(marker2);                                   // マーカをシーン�
 // モデル（メッシュ）
 var mesh2;                                            // モデルを入れる箱
 var loader = new THREE.JSONLoader();                  // json形式のモデルを読み込むローダ
-loader.load("text.gltf", function(geo, mat) {       // モデルを読み込む
+loader.load("rocket.json", function(geo, mat) {       // モデルを読み込む
   // Processing のサンプルに付属の rocket.obj を Blender で json形式にエクスポートして自作
   // rocket.obj, rocket.mtl, rocket.png を以下から DL
   // https://github.com/processing/processing-android/tree/master/examples/Basics/Shape/LoadDisplayOBJ/data
